@@ -104,7 +104,7 @@ class Node(AbstractNode):
         self,
         img: np.array,
         coord: Tuple[np.array, np.array],
-        color: Tuple(int, int, int),
+        color: Tuple[int, int, int],
     ) -> np.array:
         """Draw bbox on the image
 
