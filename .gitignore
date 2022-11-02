@@ -1,3 +1,6 @@
 # keep data folder but ignore the data files
 data/*
 !data/.gitkeep
+
+# ignore system files
+__pycache__/
