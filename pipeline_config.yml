@@ -5,10 +5,7 @@ nodes:
 - model.jde
 - dabble.statistics:
     maximum: obj_attrs["ids"]
-# - draw.bbox
 - custom_nodes.draw.motion_detector
 - draw.tag:
     show: ["ids"]
-# - draw.legend:
-#     show: ["fps"]
 - output.screen
