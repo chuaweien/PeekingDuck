@@ -1,7 +1,6 @@
 nodes:
 - input.visual:
     source: ./data/testing.mp4
-    saved_video_fps: 1
 - model.jde
 - dabble.statistics:
     maximum: obj_attrs["ids"]
