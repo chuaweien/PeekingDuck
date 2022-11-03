@@ -12,7 +12,6 @@ from peekingduck.pipeline.nodes.abstract_node import AbstractNode
 from peekingduck.pipeline.nodes.draw.utils.constants import (
     VERY_THICK,
     THICK,
-    CHAMPAGNE,
     TOMATO,
     VIOLET_BLUE,
 )
@@ -61,19 +60,19 @@ class Node(AbstractNode):
         ids = inputs["obj_attrs"]["ids"]
         img = inputs["img"]
         img_size = get_image_size(img)
+        text = ""  # no text if no one is moving
 
         for i, bbox in enumerate(bboxes):
             if ids[i] not in self.tracking:
                 # if tracking object not found in dictionary,
-                # add to dictionary with ((0, 0), (0, 0))
+                # add to dictionary with ((0, 0), (0, 0)) as starting point
                 self.tracking[ids[i]] = (
                     np.zeros((1, 2), dtype=int),
                     np.zeros((1, 2), dtype=int),
                 )
 
+            # convert bbox coordinates to image coordinates
             top_left, bottom_right = project_points_onto_original_image(bbox, img_size)
-
-            print(ids[i], top_left, bottom_right)
 
             coord = (top_left, bottom_right)
 
@@ -81,12 +80,10 @@ class Node(AbstractNode):
             if (top_left != self.tracking[ids[i]][0]).all() and (
                 bottom_right != self.tracking[ids[i]][1]
             ).all():
+                # replace previous coordinates with current coordinates
                 self.tracking[ids[i]] = coord
                 img = self.draw_bbox(img, coord, TOMATO)
                 text = "Motion Detected"
-            else:  # no movement
-                img = self.draw_bbox(img, coord, CHAMPAGNE)
-                text = ""
 
             cv2.putText(
                 img,
@@ -110,7 +107,8 @@ class Node(AbstractNode):
 
         Args:
             img (np.array): image data
-            coord (Tuple[np.array, np.array]): coordinates of the bounding box scaled to image size i.e. top_left, bottom_right
+            coord (Tuple[np.array, np.array]): coordinates of the bounding box scaled to image size
+                                                i.e. top_left, bottom_right
             color (Tuple[int, int, int]): color of the bounding box
 
         Returns:
